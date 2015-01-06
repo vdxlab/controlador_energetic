@@ -1,0 +1,5 @@
+2 * * * * echo "" > /tmp/serial.log
+* * * * * QUERY_STRING="start_update" /usr/bin/lua /www/cgi-bin/aigua.lua
+* * * * * sleep 20 && QUERY_STRING="start_update" /usr/bin/lua /www/cgi-bin/aigua.lua
+* * * * * sleep 40 && QUERY_STRING="start_update" /usr/bin/lua /www/cgi-bin/aigua.lua
+*/30 * * * * QUERY_STRING="distances_update" /usr/bin/lua /www/cgi-bin/aigua.lua

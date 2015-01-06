@@ -96,41 +96,6 @@ void loop() {
   // This allows for the update of variables for time or accessing the individual elements.                //|
   myRTC.updateTime();
   
-  //////////////////////////////////////////////
-  // Start printing RTC elements as individuals                                                            //|   
-
-  //  Serial.print("Current Date / Time: ");                                                                 //|
-  switch (myRTC.dayofweek)                  // Esto pone nombre del dia
-  {
-    case 1:
-    Serial.print(" Dilluns"); break;
-    case 2:
-    Serial.print(" Dimarts"); break;
-    case 3:
-    Serial.print(" Dimecres"); break;
-    case 4:
-    Serial.print(" Dijous"); break;
-    case 5:
-    Serial.print(" Divendres"); break;
-    case 6:
-    Serial.print(" Dissabte"); break;
-    case 7:
-    Serial.print(" Diumege"); break;
-  }
-
-  Serial.print("  ");                                                                                    //| 
-  Serial.print(myRTC.dayofmonth);                                                                        //| 
-  Serial.print("/");                                                                                     //| 
-  Serial.print(myRTC.month);                                                                             //| 
-  Serial.print("/");                                                                                     //| 
-  Serial.print(myRTC.year);                                                                              //| 
-  Serial.print("  ");                                                                                    //| 
-  Serial.print(myRTC.hours);                                                                             //| 
-  Serial.print(":");                                                                                     //| 
-  Serial.print(myRTC.minutes);                                                                           //| 
-  Serial.print(":");                                                                                     //| 
-  Serial.println(myRTC.seconds);    
-  
   
   //////////////////
   //ara el VOLTATGE
@@ -187,6 +152,41 @@ void loop() {
   Serial.println (" analogRead(A1)");
 */
 
+
+//////////////////////////////////////////////
+// Start printing RTC elements as individuals                                                            //|   
+
+//  Serial.print("Current Date / Time: ");                                                                 //|
+  switch (myRTC.dayofweek)                  // Esto pone nombre del dia
+  {
+    case 1:
+    Serial.print(" Lunes"); break;
+    case 2:
+    Serial.print(" Martes"); break;
+    case 3:
+    Serial.print(" Miercoles"); break;
+    case 4:
+    Serial.print(" Jueves"); break;
+    case 5:
+    Serial.print(" Viernes"); break;
+    case 6:
+    Serial.print(" Sabado"); break;
+    case 7:
+    Serial.print(" Domingo"); break;
+  }
+  Serial.print("  ");                                                                                    //| 
+  Serial.print(myRTC.dayofmonth);                                                                        //| 
+  Serial.print("/");                                                                                     //| 
+  Serial.print(myRTC.month);                                                                             //| 
+  Serial.print("/");                                                                                     //| 
+  Serial.print(myRTC.year);                                                                              //| 
+  Serial.print("  ");                                                                                    //| 
+  Serial.print(myRTC.hours);                                                                             //| 
+  Serial.print(":");                                                                                     //| 
+  Serial.print(myRTC.minutes);                                                                           //| 
+  Serial.print(":");                                                                                     //| 
+  Serial.println(myRTC.seconds);    
+  
   
 ///////////////////////////  FINAL TRAM EN OBRES !!  //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

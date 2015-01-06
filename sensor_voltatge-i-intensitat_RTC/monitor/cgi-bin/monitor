@@ -1,0 +1,11 @@
+#!/usr/bin/lua
+
+print ("Content-type: text/plain\n")
+print("MONITOR CORRENT")
+f = io.open("/tmp/serial.log",'r')
+len = f:seek("end")
+f:seek("set", len - 1024)
+print(f:read('*a'))
+f:close()
+    
+

@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Aigua Talaia</title>
+
+	<script src="/static/js/raphael-min.js"></script>
+	<script src="/static/js/g.raphael.js"></script>
+	<script src="/static/js/g.pie.js"></script>
+	<script src="/static/js/g.bar.js"></script>
+	<script src="/static/js/g.line.js"></script>
+	<script src="/static/js/g.dot.js"></script>
+
+	<script>
+
+	function Get(Url){
+		var Httpreq = new XMLHttpRequest();
+		Httpreq.open("GET",Url,false);
+		Httpreq.send(null);
+		return Httpreq.responseText;          
+    	};
+
+	function insert_text (id,txt) {
+	    document.getElementById(id).innerHTML = txt;
+	}
+
+	function chart_hover() {
+		this.tags = chart_hover_r.set();
+			for (var i = 0, ii = this.y.length; i < ii; i++) {
+				this.tags.push(chart_hover_r.tag(this.x, this.y[i], this.values[i], 160, 10).insertBefore(this).attr([{ fill: "#fff" }, { fill: this.symbols[i].attr("fill") }]));
+			}	
+    }		
+
+	function chart_hover_clean() {
+        this.tags && this.tags.remove();		
+	}
+	
+	var chart_hover_r;
+	var json_dalt_dist = JSON.parse(Get("/cgi-bin/aigua.lua?stats=dalt_dist"));
+	var json_info = JSON.parse(Get("/cgi-bin/aigua.lua"));
+	var json_start = JSON.parse(Get("/cgi-bin/aigua.lua?stats=start"));
+
+    window.onload = function () {
+
+		// INFO ACTUAL
+		insert_text('dalt_dist',json_info.dalt_dist);
+		insert_text('verd_dist',json_info.verd_dist);
+		insert_text('bomba_aljub',json_info.bomba_aljub);
+		insert_text('bomba_altura',json_info.bomba_altura);
+		insert_text('start',json_info.start);
+		
+		// ULTIMS FUNCIONAMENTS
+		var table_start = document.getElementById("tstart");
+		var table_start_header = table_start.createTHead();
+		var init = 0;
+		if (json_start.length > 8)
+			init = json_start.length - 10;
+		for (i=init, len=json_start.length; i<len; i++) {
+			var table_start_row = table_start.insertRow(0);
+			var cell1 = table_start_row.insertCell(0);
+			var cell2 = table_start_row.insertCell(1);
+			cell1.innerHTML = json_start[1].date;
+			cell2.innerHTML = json_start[i].value;
+		}
+		table_start_header.insertRow(0).insertCell(0).innerHTML = "<b>Últims funcionaments</b>";
+		
+		// GRAFICS
+		var altures = [];
+		var mostres = [];
+		var max_altura = 40;
+		var min_altura = 8;
+		var r_altura = Raphael("holder"), txtattr = { font: "8px sans-serif" };
+        var max = 240;
+		var init = 0;
+		
+		// DIPOSIT DALT
+		if ( json_dalt_dist.length > max) init = json_dalt_dist.length-max;
+		for (i=init, len=json_dalt_dist.length; i<len; i++) {
+			altures[i] = 100-((json_dalt_dist[i].value-min_altura)/(max_altura-min_altura))*100;
+			mostres[i] = i;
+		}
+
+		/*
+		var r1 = Raphael("queso");
+		r1.text(320, 70, json_obj.title).attr({ font: "20px sans-serif" });
+	    r1.piechart(320, 240, 150, [altura,terra], {legend:["altura","terra"]});
+		
+		var r2 = Raphael("bars");
+		r2.text(320, 70, json_obj.title).attr({ font: "20px sans-serif" });
+		r2.barchart(250, 70, 320, 220, [[1,2,3,4], [1,2,3,4]], {stacked:false});
+		*/
+		r_altura.text(100, 10, "Diposit altura (%)").attr({ font: "16px sans-serif" });
+	    var lines = r_altura.linechart(20, 20, 900, 320, mostres, altures, { nostroke: false, axis: "0 0 1 1", symbol: "circle", smooth: true });
+		chart_hover_r = r_altura;
+		lines.hoverColumn( chart_hover, chart_hover_clean);
+		lines.symbols.attr({ r: 6 });
+    };
+	</script>
+</head>
+
+<body class="aigues" id="aigues">
+	<div id="title" style="background-color:#575594;border-radius:10px;margin:10px;height: 60px">
+		<center><h1 style="color: #fff;font-size: 45px">Aigües la Talaia</h1></center>
+	</div>
+	
+	<div id="info" style="float: left; margin: 20px; background-color: #fff">
+		<table id="tinfo" style="border-radius: 5px;background-color: #D4EE9F">
+			<th>Informació actual</th>
+			<tr><td>Diposit dalt (cm)</td><td id="dalt_dist"></td></tr>
+			<tr><td>Diposit verd (cm)</td><td id="verd_dist"></td></tr>
+			<tr><td>Bomba aljub</td><td id="bomba_aljub"></td></tr>
+			<tr><td>Bomba altura</td><td id="bomba_altura"></td></tr>
+			<tr><td>Funcionament</td><td id="start"></td></tr>
+		</table>
+	</div>
+
+	<div id="starts" style="float:left; margin:20px">
+		<table id="tstart" style="border-radius:5px;background-color: #D45E1F">
+		</table>
+	</div>
+	
+	<div id="holder" style="height:900px;margin: 20px; float: inherit"></div>
+	<div style="height:900px;" id="lines"></div>
+</body>
+
+</html>
